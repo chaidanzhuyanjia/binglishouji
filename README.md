@@ -21,6 +21,3 @@
 
 不要输入姓名、身份证、手机号、住址、床号、门诊号、住院号，也不要上传原始检查单照片到公共AI。
 
-## 原生iOS App
-
-真正打包成 `.ipa` 或上架 TestFlight/App Store，需要 macOS、Xcode、Apple Developer 账号和签名证书。当前Windows环境不能直接完成iOS原生打包。
