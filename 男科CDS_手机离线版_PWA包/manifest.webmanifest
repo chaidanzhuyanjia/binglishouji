@@ -1,0 +1,19 @@
+{
+  "name": "男科CDS 手机离线版",
+  "short_name": "男科CDS",
+  "description": "个人男科诊疗规则核对、量表评分、脱敏病例库和AI复盘提示词。",
+  "start_url": "./男科CDS_手机离线版.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef4f2",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

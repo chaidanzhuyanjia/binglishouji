@@ -1,0 +1,1641 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="男科CDS">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <title>男科CDS 手机离线版</title>
+  <style>
+    :root {
+      --bg: #eef4f2;
+      --surface: #ffffff;
+      --surface-2: #f7fbfa;
+      --line: #d6e3df;
+      --text: #132321;
+      --muted: #5d706c;
+      --primary: #0f766e;
+      --primary-2: #134e4a;
+      --primary-soft: #dff1ee;
+      --red: #b91c1c;
+      --red-soft: #fee2e2;
+      --amber: #b45309;
+      --amber-soft: #fef3c7;
+      --green: #166534;
+      --green-soft: #dcfce7;
+      --blue: #1d4ed8;
+      --blue-soft: #dbeafe;
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding-bottom: calc(74px + env(safe-area-inset-bottom));
+      background: var(--bg);
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      padding: 11px 12px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, .14);
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: calc(14px + env(safe-area-inset-top)) 14px 12px;
+      background: linear-gradient(180deg, #0f766e, #105d57);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, .14);
+    }
+
+    .app-header h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .app-header p {
+      margin: 4px 0 0;
+      color: #d4f7f1;
+      font-size: 12px;
+    }
+
+    main {
+      padding: 12px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .card-head h2, .card-head h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .card-body {
+      padding: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 11px;
+    }
+
+    label span {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .field-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .voice-btn {
+      min-height: 30px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .voice-btn.recording {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .primary, .ghost, .danger, .mini {
+      min-height: 42px;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .ghost {
+      background: #fff;
+      color: var(--primary-2);
+      border: 1px solid var(--line);
+    }
+
+    .danger {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .mini {
+      min-height: 34px;
+      padding: 6px 9px;
+      font-size: 12px;
+      background: var(--primary-soft);
+      color: var(--primary-2);
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .alert {
+      border-radius: 9px;
+      padding: 10px 11px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .alert.red {
+      background: var(--red-soft);
+      color: var(--red);
+      border: 1px solid #fecaca;
+    }
+
+    .alert.amber {
+      background: var(--amber-soft);
+      color: #8a3d0a;
+      border: 1px solid #fde68a;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .score {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 9px;
+      text-align: center;
+    }
+
+    .score small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .score strong {
+      display: block;
+      color: var(--primary-2);
+      font-size: 20px;
+      margin-top: 2px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 13px 0 8px;
+      color: var(--primary-2);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex: 0 0 auto;
+    }
+
+    ul.clean {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    ul.clean li {
+      margin: 6px 0;
+      line-height: 1.45;
+    }
+
+    .tag-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tag.red { color: var(--red); background: var(--red-soft); }
+    .tag.amber { color: var(--amber); background: var(--amber-soft); }
+    .tag.green { color: var(--green); background: var(--green-soft); }
+    .tag.blue { color: var(--blue); background: var(--blue-soft); }
+    .tag.gray { color: #475569; background: #e2e8f0; }
+
+    .hypothesis {
+      border-left: 4px solid var(--primary);
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 9px 10px;
+      margin-bottom: 8px;
+    }
+
+    .hypothesis strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .prompt-box, .data-box {
+      width: 100%;
+      min-height: 180px;
+      background: #f8fafc;
+      font-size: 14px;
+    }
+
+    .case-item {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 11px;
+      margin-bottom: 9px;
+      background: #fff;
+    }
+
+    .case-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 7px;
+    }
+
+    .case-top strong {
+      font-size: 15px;
+    }
+
+    .case-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .case-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .review-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 9px;
+      padding: 11px;
+      margin-bottom: 10px;
+    }
+
+    .review-card h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: var(--primary-2);
+    }
+
+    .path-card {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 11px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .path-card h3 {
+      margin: 0 0 6px;
+      color: var(--primary-2);
+      font-size: 15px;
+    }
+
+    .scale-tools {
+      display: grid;
+      gap: 9px;
+      margin: 2px 0 12px;
+    }
+
+    .scale-panel {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .scale-panel summary {
+      list-style: none;
+      padding: 12px;
+      background: var(--primary-soft);
+      color: var(--primary-2);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .scale-panel summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .scale-body {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .scale-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .scale-row label {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .scale-checks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .scale-checks label {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--text);
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .scale-checks input {
+      width: auto;
+    }
+
+    .scale-result {
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary-2);
+      min-height: 38px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: #cfe0dc;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-shadow: 0 -8px 20px rgba(15, 23, 42, .12);
+    }
+
+    .nav-btn {
+      min-height: 58px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .nav-btn.active {
+      color: #fff;
+      background: var(--primary);
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 20px 6px;
+      font-size: 13px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (min-width: 760px) {
+      body { padding-bottom: 0; }
+      main { padding: 18px; }
+      .bottom-nav {
+        position: sticky;
+        top: 0;
+        bottom: auto;
+        max-width: 980px;
+        margin: 0 auto;
+        border-radius: 0 0 10px 10px;
+        overflow: hidden;
+      }
+      .nav-btn { min-height: 48px; }
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1>男科CDS 手机离线版</h1>
+    <p>规则核对 + 脱敏病例库 + AI复盘提示词。数据只存在本机浏览器。</p>
+  </header>
+
+  <main>
+    <section id="page-work" class="page active">
+      <div class="card">
+        <div class="card-head">
+          <h2>新病例</h2>
+          <button id="demoBtn" class="mini" type="button">示例</button>
+        </div>
+        <div class="card-body">
+          <div class="alert amber">
+            不填患者姓名、手机号、身份证、住址、床号、门诊号、住院号。原始报告照片不要上传到AI。
+          </div>
+          <div class="form-grid">
+            <label><span>病例编号</span><input id="caseId" placeholder="ED-001"></label>
+            <label><span>年龄段</span>
+              <select id="ageBand">
+                <option value="">未选</option>
+                <option>18-29岁</option>
+                <option>30-39岁</option>
+                <option>40-49岁</option>
+                <option>50-59岁</option>
+                <option>60岁以上</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-grid">
+            <label><span>病种</span>
+              <select id="disease">
+                <option value="ed">ED</option>
+                <option value="pe">早泄</option>
+                <option value="cpps">慢性前列腺炎/CPPS</option>
+                <option value="infertility">男性不育</option>
+              </select>
+            </label>
+            <label><span>就诊类型</span>
+              <select id="visitType">
+                <option>首诊</option>
+                <option>复诊</option>
+                <option>线上复诊</option>
+                <option>随访</option>
+              </select>
+            </label>
+          </div>
+          <label><span class="field-title">主诉与病程<button class="voice-btn" data-voice-target="complaint" type="button">语音</button></span><textarea id="complaint" placeholder="例：勃起维持差6个月，晨勃减少，压力大，睡眠差。"></textarea></label>
+          <label><span class="field-title">病史、伴随症状、生活方式<button class="voice-btn" data-voice-target="history" type="button">语音</button></span><textarea id="history" placeholder="基础病、用药史、烟酒、疼痛、排尿、备孕、伴侣因素、心理压力等。"></textarea></label>
+          <label><span class="field-title">检查与量表摘要<button class="voice-btn" data-voice-target="tests" type="button">语音</button></span><textarea id="tests" placeholder="IIEF-5、PEDT、NIH-CPSI、精液分析、尿检、性激素、血糖血脂等。"></textarea></label>
+          <div class="scale-tools" id="scaleTools"></div>
+          <label><span class="field-title">舌脉与中医信息<button class="voice-btn" data-voice-target="tcm" type="button">语音</button></span><textarea id="tcm" placeholder="舌红少苔、苔黄腻、脉弦、怕冷、腰膝酸软、口苦、大便黏滞等。"></textarea></label>
+          <label><span class="field-title">当前处理与我的疑问<button class="voice-btn" data-voice-target="notes" type="button">语音</button></span><textarea id="notes" placeholder="已做什么、担心漏了什么、下次复诊想看什么。"></textarea></label>
+          <div class="btn-row">
+            <button id="analyzeBtn" class="primary" type="button">分析</button>
+            <button id="saveBtn" class="ghost" type="button">保存</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-result" class="page">
+      <div class="card">
+        <div class="card-head">
+          <h2>核对结果</h2>
+          <button id="copyPromptBtn" class="mini" type="button">复制提示词</button>
+        </div>
+        <div class="card-body">
+          <div id="privacyBox" class="alert red hidden"></div>
+          <div class="score-grid">
+            <div class="score"><small>完整度</small><strong id="scoreComplete">0%</strong></div>
+            <div class="score"><small>风险</small><strong id="scoreRisk">未分析</strong></div>
+            <div class="score"><small>待补项</small><strong id="scoreMissing">0</strong></div>
+          </div>
+
+          <div class="section-title"><span class="dot"></span>红旗/转诊风险</div>
+          <ul id="riskList" class="clean"></ul>
+
+          <div class="section-title"><span class="dot"></span>必须补问补查</div>
+          <ul id="missingList" class="clean"></ul>
+
+          <div class="section-title"><span class="dot"></span>下一步核对</div>
+          <ul id="nextList" class="clean"></ul>
+
+          <div class="section-title"><span class="dot"></span>中医辨证假设</div>
+          <div id="tcmList"></div>
+
+          <div class="section-title"><span class="dot"></span>复诊指标</div>
+          <ul id="followList" class="clean"></ul>
+
+          <div class="section-title"><span class="dot"></span>脱敏AI提示词</div>
+          <textarea id="promptBox" class="prompt-box" readonly></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-library" class="page">
+      <div class="card">
+        <div class="card-head">
+          <h2>病例库</h2>
+          <select id="filterDisease" style="max-width: 130px;">
+            <option value="all">全部</option>
+            <option value="ed">ED</option>
+            <option value="pe">早泄</option>
+            <option value="cpps">CPPS</option>
+            <option value="infertility">不育</option>
+          </select>
+        </div>
+        <div class="card-body">
+          <div id="caseStats" class="tag-wrap" style="margin-bottom: 12px;"></div>
+          <div id="caseList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-review" class="page">
+      <div class="card">
+        <div class="card-head">
+          <h2>周复盘</h2>
+          <button id="reviewBtn" class="mini" type="button">生成</button>
+        </div>
+        <div class="card-body">
+          <div id="reviewOutput"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-data" class="page">
+      <div class="card">
+        <div class="card-head">
+          <h2>数据</h2>
+        </div>
+        <div class="card-body">
+          <div class="btn-row">
+            <button id="exportBtn" class="ghost" type="button">导出JSON</button>
+            <button id="importBtn" class="ghost" type="button">导入JSON</button>
+          </div>
+          <label style="margin-top: 12px;"><span>JSON数据</span><textarea id="dataBox" class="data-box" placeholder="导出后会显示在这里；导入时粘贴JSON后点导入。"></textarea></label>
+          <button id="clearBtn" class="danger" type="button" style="width: 100%; margin-top: 6px;">清空本机数据</button>
+          <p class="hint" style="margin-top: 10px;">手机浏览器清缓存、换浏览器、隐私模式，都可能导致本地数据丢失。建议定期导出。</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>内置路径库</h2></div>
+        <div class="card-body" id="pathLibrary"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="底部导航">
+    <button class="nav-btn active" data-page="work" type="button">新病例</button>
+    <button class="nav-btn" data-page="result" type="button">结果</button>
+    <button class="nav-btn" data-page="library" type="button">病例库</button>
+    <button class="nav-btn" data-page="review" type="button">复盘</button>
+    <button class="nav-btn" data-page="data" type="button">数据</button>
+  </nav>
+
+  <script>
+    const STORE_KEY = "andrology_cds_mobile_cases_v1";
+
+    const diseaseMap = {
+      ed: {
+        label: "ED",
+        must: [
+          ["晨勃/夜间勃起", ["晨勃", "夜间勃起", "勃起硬度"]],
+          ["IIEF-5或硬度分级", ["IIEF", "IIEF-5", "EHS", "硬度"]],
+          ["心血管与代谢风险", ["高血压", "糖尿病", "血糖", "血脂", "冠心病", "肥胖", "BMI"]],
+          ["用药史", ["药", "降压", "抗抑郁", "硝酸", "用药"]],
+          ["性欲/射精/伴侣因素", ["性欲", "射精", "伴侣", "性生活"]],
+          ["睾酮或内分泌线索", ["睾酮", "泌乳素", "LH", "FSH", "内分泌"]]
+        ],
+        next: [
+          "先排查硝酸酯类用药和高危心血管状态。",
+          "把ED分成心理/血管代谢/内分泌/药物/伴侣因素几个假设。",
+          "复诊时记录IIEF-5或硬度变化、满意度、不良反应。"
+        ],
+        follow: ["IIEF-5或EHS", "晨勃变化", "性生活成功率", "基础病控制", "不良反应", "患者满意度"],
+        red: [
+          ["胸痛或高危心血管", ["胸痛", "心绞痛", "心梗", "冠脉", "高危心血管"]],
+          ["硝酸酯类用药", ["硝酸甘油", "单硝酸", "硝酸异山梨酯"]],
+          ["严重抑郁或自伤风险", ["自杀", "自伤", "轻生", "严重抑郁"]]
+        ]
+      },
+      pe: {
+        label: "早泄",
+        must: [
+          ["原发/继发", ["原发", "继发", "从第一次", "最近出现"]],
+          ["全程/情境性", ["全程", "情境", "特定伴侣", "所有情况"]],
+          ["IELT估计", ["IELT", "插入", "时间", "分钟", "秒"]],
+          ["控制感和困扰程度", ["控制", "困扰", "焦虑", "满意"]],
+          ["PEDT", ["PEDT"]],
+          ["合并ED/炎症/甲状腺线索", ["ED", "勃起", "前列腺", "疼痛", "甲状腺", "尿频"]]
+        ],
+        next: [
+          "先区分原发/继发、全程/情境性。",
+          "合并ED时先或同时处理ED，不要只盯射精时间。",
+          "复诊看控制感、困扰程度和伴侣满意度。"
+        ],
+        follow: ["IELT估计", "控制感", "PEDT", "困扰程度", "伴侣满意度", "不良反应"],
+        red: [
+          ["继发且进展快", ["突然", "近期", "明显变快", "进行性"]],
+          ["疼痛或感染线索", ["疼痛", "发热", "尿痛", "脓", "感染"]],
+          ["严重心理风险", ["自杀", "自伤", "轻生", "严重抑郁"]]
+        ]
+      },
+      cpps: {
+        label: "慢性前列腺炎/CPPS",
+        must: [
+          ["疼痛部位和诱因", ["会阴", "盆腔", "睾丸", "阴茎", "下腹", "疼痛", "久坐"]],
+          ["病程是否超过3个月", ["3个月", "三个月", "半年", "年"]],
+          ["NIH-CPSI", ["NIH", "CPSI", "NIH-CPSI"]],
+          ["尿检/感染证据", ["尿检", "尿常规", "培养", "白细胞", "细菌"]],
+          ["排尿症状", ["尿频", "尿急", "尿痛", "尿不尽", "夜尿"]],
+          ["心理睡眠与盆底/肌骨因素", ["焦虑", "抑郁", "睡眠", "盆底", "肌肉", "久坐"]]
+        ],
+        next: [
+          "把问题拆成疼痛、排尿、感染证据、心理睡眠、盆底肌骨几个表型。",
+          "没有感染证据时，避免反复把抗生素作为唯一策略。",
+          "复诊用NIH-CPSI或症状评分看趋势。"
+        ],
+        follow: ["NIH-CPSI", "疼痛评分", "排尿症状", "睡眠和焦虑", "盆底/久坐诱因", "不良反应"],
+        red: [
+          ["发热寒战或急性感染", ["发热", "寒战", "高热"]],
+          ["肉眼血尿", ["肉眼血尿", "血尿"]],
+          ["急性尿潴留", ["尿潴留", "排不出尿"]],
+          ["疑似肿瘤或神经异常", ["肿块", "消瘦", "神经", "麻木", "无力"]]
+        ]
+      },
+      infertility: {
+        label: "男性不育",
+        must: [
+          ["备孕时长与女方评估", ["备孕", "未孕", "女方", "输卵管", "排卵", "年龄"]],
+          ["精液分析及复查", ["精液", "精子", "复查", "少精", "弱精", "畸形", "无精"]],
+          ["性生活频率与时机", ["性生活", "频率", "排卵期", "同房"]],
+          ["隐睾/腮腺炎/手术感染史", ["隐睾", "腮腺炎", "手术", "感染", "附睾"]],
+          ["精索静脉曲张和体检", ["精索静脉曲张", "睾丸", "体积", "阴囊"]],
+          ["内分泌/遗传风险", ["FSH", "LH", "睾酮", "染色体", "Y染色体", "AZF", "遗传"]]
+        ],
+        next: [
+          "异常精液分析通常需要规范复查，避免一次结果定结论。",
+          "夫妻同评估，女方年龄和因素会影响转诊节奏。",
+          "无精或重度少弱精要尽快考虑专科/生殖中心路径。"
+        ],
+        follow: ["精液分析复查", "女方评估进度", "生活方式改变", "精索静脉曲张评估", "内分泌结果", "转诊节点"],
+        red: [
+          ["无精或重度少弱精", ["无精", "严重少精", "重度少精", "极重度"]],
+          ["睾丸肿块或萎缩", ["肿块", "睾丸小", "萎缩"]],
+          ["女方高龄或备孕时间长", ["女方高龄", "女方38", "女方40", "多年未孕"]],
+          ["遗传风险", ["染色体", "AZF", "Y染色体", "遗传"]]
+        ]
+      }
+    };
+
+    const tcmRules = [
+      {
+        name: "湿热下注",
+        keys: ["苔黄腻", "黄腻", "口苦", "尿黄", "尿痛", "会阴胀痛", "大便黏", "阴囊潮湿"],
+        note: "常见支持点：湿热、尿路或前列腺相关症状、苔黄腻。需先排除感染、急症和器质性问题。"
+      },
+      {
+        name: "肝郁气滞",
+        keys: ["压力", "焦虑", "情绪", "胸胁", "脉弦", "烦躁", "睡眠差"],
+        note: "常见支持点：情志压力、症状波动、脉弦。适合和心理睡眠、生活方式管理一起看。"
+      },
+      {
+        name: "肾阳虚",
+        keys: ["怕冷", "畏寒", "腰膝酸软", "夜尿", "性欲低下", "舌淡", "脉沉迟"],
+        note: "常见支持点：寒象、腰膝酸软、性欲低下。注意与内分泌、代谢问题区分。"
+      },
+      {
+        name: "肾阴虚",
+        keys: ["五心烦热", "盗汗", "舌红少苔", "少苔", "口干", "脉细数", "潮热"],
+        note: "常见支持点：虚热、舌红少苔、睡眠或焦虑问题。避免只凭单个症状定证。"
+      },
+      {
+        name: "瘀血阻滞",
+        keys: ["刺痛", "固定痛", "舌紫", "瘀斑", "术后", "外伤", "精索静脉曲张"],
+        note: "常见支持点：固定刺痛、舌紫暗、手术外伤或静脉曲张线索。"
+      }
+    ];
+
+    const privacyRules = [
+      ["疑似手机号", /1[3-9]\d{9}/],
+      ["疑似身份证号", /\d{6}(18|19|20)\d{2}(0[1-9]|1[0-2])([0-2]\d|3[01])\d{3}[\dXx]/],
+      ["疑似住址/身份字段", /(姓名|身份证|手机号|电话|住址|家庭住址|门诊号|住院号|床号|病历号)/],
+      ["疑似详细日期", /(19|20)\d{2}[-年/.](0?[1-9]|1[0-2])[-月/.](0?[1-9]|[12]\d|3[01])/]
+    ];
+
+    const scaleMeta = {
+      iief: {
+        title: "IIEF-5 ED快速评分",
+        prefix: "IIEF-5",
+        items: ["勃起信心", "插入成功", "插入后维持", "维持至完成", "性生活满意度"],
+        options: [
+          [1, "1 极低/几乎没有"],
+          [2, "2 较低/少数时候"],
+          [3, "3 中等/有时"],
+          [4, "4 较高/多数时候"],
+          [5, "5 很高/几乎总是"]
+        ]
+      },
+      pedt: {
+        title: "PEDT 早泄快速评分",
+        prefix: "PEDT",
+        items: ["延迟射精困难", "早于预期射精", "轻微刺激即射精", "因此挫败/困扰", "担心伴侣不满足"],
+        options: [
+          [0, "0 无/从不"],
+          [1, "1 轻/偶尔"],
+          [2, "2 中等/约一半"],
+          [3, "3 明显/多数时候"],
+          [4, "4 极明显/几乎总是"]
+        ]
+      },
+      ipss: {
+        title: "IPSS 排尿症状快速评分",
+        prefix: "IPSS",
+        items: ["排尿不尽", "尿频", "间断排尿", "尿急", "尿线变细", "用力排尿", "夜尿次数"],
+        options: [
+          [0, "0 无"],
+          [1, "1 少于1/5"],
+          [2, "2 少于1/2"],
+          [3, "3 约1/2"],
+          [4, "4 超过1/2"],
+          [5, "5 几乎总是"]
+        ]
+      }
+    };
+
+    const els = {
+      caseId: document.getElementById("caseId"),
+      ageBand: document.getElementById("ageBand"),
+      disease: document.getElementById("disease"),
+      visitType: document.getElementById("visitType"),
+      complaint: document.getElementById("complaint"),
+      history: document.getElementById("history"),
+      tests: document.getElementById("tests"),
+      tcm: document.getElementById("tcm"),
+      notes: document.getElementById("notes"),
+      scoreComplete: document.getElementById("scoreComplete"),
+      scoreRisk: document.getElementById("scoreRisk"),
+      scoreMissing: document.getElementById("scoreMissing"),
+      privacyBox: document.getElementById("privacyBox"),
+      riskList: document.getElementById("riskList"),
+      missingList: document.getElementById("missingList"),
+      nextList: document.getElementById("nextList"),
+      tcmList: document.getElementById("tcmList"),
+      followList: document.getElementById("followList"),
+      promptBox: document.getElementById("promptBox"),
+      caseList: document.getElementById("caseList"),
+      caseStats: document.getElementById("caseStats"),
+      filterDisease: document.getElementById("filterDisease"),
+      reviewOutput: document.getElementById("reviewOutput"),
+      dataBox: document.getElementById("dataBox"),
+      pathLibrary: document.getElementById("pathLibrary"),
+      scaleTools: document.getElementById("scaleTools")
+    };
+
+    let lastAnalysis = null;
+
+    function nowDate() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function getText() {
+      return [els.complaint.value, els.history.value, els.tests.value, els.tcm.value, els.notes.value].join("\n");
+    }
+
+    function includesAny(text, keys) {
+      return keys.some(k => text.includes(k));
+    }
+
+    function unique(items) {
+      return [...new Set(items)];
+    }
+
+    function getCases() {
+      try {
+        return JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function setCases(cases) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(cases));
+    }
+
+    function collectCase() {
+      return {
+        id: els.caseId.value.trim() || `${diseaseMap[els.disease.value].label}-${Date.now().toString().slice(-6)}`,
+        ageBand: els.ageBand.value,
+        disease: els.disease.value,
+        visitType: els.visitType.value,
+        complaint: els.complaint.value.trim(),
+        history: els.history.value.trim(),
+        tests: els.tests.value.trim(),
+        tcm: els.tcm.value.trim(),
+        notes: els.notes.value.trim(),
+        date: nowDate()
+      };
+    }
+
+    function analyze() {
+      const item = collectCase();
+      const profile = diseaseMap[item.disease];
+      const text = getText();
+
+      const privacyHits = privacyRules
+        .filter(([, rule]) => rule.test(text))
+        .map(([label]) => label);
+
+      const missing = [];
+      const present = [];
+      profile.must.forEach(([label, keys]) => {
+        if (includesAny(text, keys)) present.push(label);
+        else missing.push(label);
+      });
+
+      const risks = [];
+      profile.red.forEach(([label, keys]) => {
+        if (includesAny(text, keys)) risks.push(label);
+      });
+      const globalRisks = [
+        ["急性阴囊或睾丸疼痛", ["急性睾丸痛", "睾丸剧痛", "阴囊剧痛", "扭转"]],
+        ["发热寒战", ["发热", "寒战", "高热"]],
+        ["肉眼血尿", ["肉眼血尿", "血尿"]],
+        ["严重自伤风险", ["自杀", "自伤", "轻生"]]
+      ];
+      globalRisks.forEach(([label, keys]) => {
+        if (includesAny(text, keys)) risks.push(label);
+      });
+
+      const tcmHits = tcmRules
+        .map(rule => ({ ...rule, score: rule.keys.filter(k => text.includes(k)).length }))
+        .filter(rule => rule.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+
+      const completeness = Math.round((present.length / profile.must.length) * 100);
+      const riskLevel = risks.length > 0 ? "需警惕" : privacyHits.length > 0 ? "隐私风险" : completeness < 50 ? "信息不足" : "常规";
+
+      const next = [
+        ...profile.next,
+        missing.length ? `优先补齐：${missing.slice(0, 3).join("、")}。` : "信息完整度较高，下一步重点看疗效和安全性。",
+        "所有建议最终按本院规范、上级医师意见和患者实际情况判断。"
+      ];
+
+      const prompt = buildPrompt(item, profile, missing, risks, tcmHits);
+      lastAnalysis = {
+        ...item,
+        profile: profile.label,
+        completeness,
+        riskLevel,
+        missing,
+        risks: unique(risks),
+        privacyHits,
+        tcmHits,
+        next,
+        follow: profile.follow,
+        prompt,
+        savedAt: new Date().toISOString()
+      };
+
+      renderAnalysis(lastAnalysis);
+      showPage("result");
+      return lastAnalysis;
+    }
+
+    function buildPrompt(item, profile, missing, risks, tcmHits) {
+      return [
+        "你是临床资料核对助手。以下是已脱敏男科病例，请只做漏问漏查、红旗风险、复诊指标和学习复盘提示，不要替医生下最终诊断，不要直接开处方。",
+        "",
+        `病种：${profile.label}`,
+        `年龄段：${item.ageBand || "未填"}`,
+        `就诊类型：${item.visitType}`,
+        `主诉与病程：${item.complaint || "未填"}`,
+        `病史/伴随症状/生活方式：${item.history || "未填"}`,
+        `检查与量表：${item.tests || "未填"}`,
+        `舌脉与中医信息：${item.tcm || "未填"}`,
+        `当前处理与我的疑问：${item.notes || "未填"}`,
+        "",
+        `本地规则已提示待补项：${missing.length ? missing.join("、") : "暂无明显缺项"}`,
+        `本地规则已提示红旗：${risks.length ? unique(risks).join("、") : "未发现明确红旗词"}`,
+        `中医证型假设：${tcmHits.length ? tcmHits.map(x => x.name).join("、") : "信息不足"}`,
+        "",
+        "请按以下格式输出：",
+        "1. 必须补问补查",
+        "2. 可选补充信息",
+        "3. 红旗/转诊提醒",
+        "4. 中西医思路对照",
+        "5. 下次复诊观察指标",
+        "6. 我最该补的3个知识点"
+      ].join("\n");
+    }
+
+    function renderAnalysis(a) {
+      els.scoreComplete.textContent = `${a.completeness}%`;
+      els.scoreRisk.textContent = a.riskLevel;
+      els.scoreMissing.textContent = String(a.missing.length);
+
+      if (a.privacyHits.length) {
+        els.privacyBox.classList.remove("hidden");
+        els.privacyBox.textContent = `隐私提醒：检测到${a.privacyHits.join("、")}。这段内容不要上传到公共AI，先删除或改写。`;
+      } else {
+        els.privacyBox.classList.add("hidden");
+      }
+
+      renderList(els.riskList, a.risks.length ? a.risks : ["未发现明确红旗词。仍需按临床判断排除急症、肿瘤、感染、严重心理风险。"]);
+      renderList(els.missingList, a.missing.length ? a.missing : ["核心信息较完整。"]);
+      renderList(els.nextList, a.next);
+      renderList(els.followList, a.follow);
+      els.promptBox.value = a.prompt;
+
+      els.tcmList.innerHTML = "";
+      if (!a.tcmHits.length) {
+        els.tcmList.innerHTML = '<p class="hint">中医信息不足，建议补寒热、汗出、口渴、大便、小便、睡眠、舌苔、脉象、情志等。</p>';
+      } else {
+        a.tcmHits.forEach(hit => {
+          const div = document.createElement("div");
+          div.className = "hypothesis";
+          div.innerHTML = `<strong>${hit.name}</strong><span>${hit.note}</span>`;
+          els.tcmList.appendChild(div);
+        });
+      }
+    }
+
+    function renderList(el, items) {
+      el.innerHTML = "";
+      items.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        el.appendChild(li);
+      });
+    }
+
+    function saveCurrent() {
+      const a = lastAnalysis || analyze();
+      const cases = getCases();
+      const idx = cases.findIndex(x => x.id === a.id);
+      if (idx >= 0) cases[idx] = a;
+      else cases.unshift(a);
+      setCases(cases);
+      renderLibrary();
+      toast("已保存到本机病例库");
+    }
+
+    function renderLibrary() {
+      const cases = getCases();
+      const filter = els.filterDisease.value;
+      const filtered = filter === "all" ? cases : cases.filter(x => x.disease === filter);
+      const counts = Object.keys(diseaseMap).map(key => {
+        const count = cases.filter(x => x.disease === key).length;
+        return `<span class="tag blue">${diseaseMap[key].label} ${count}</span>`;
+      }).join("");
+      els.caseStats.innerHTML = `<span class="tag green">总数 ${cases.length}</span>${counts}`;
+      els.caseList.innerHTML = "";
+      if (!filtered.length) {
+        els.caseList.innerHTML = '<div class="empty">暂无病例。先在“新病例”页分析并保存。</div>';
+        return;
+      }
+      filtered.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "case-item";
+        const riskClass = c.risks && c.risks.length ? "red" : c.privacyHits && c.privacyHits.length ? "amber" : "green";
+        div.innerHTML = `
+          <div class="case-top">
+            <strong>${escapeHtml(c.id)}</strong>
+            <span class="tag ${riskClass}">${escapeHtml(c.riskLevel || "常规")}</span>
+          </div>
+          <div class="case-meta">${escapeHtml(c.date || "")} · ${escapeHtml(diseaseMap[c.disease]?.label || c.profile || "")} · 完整度 ${c.completeness || 0}% · 待补 ${c.missing?.length || 0}</div>
+          <div class="hint">${escapeHtml((c.complaint || "").slice(0, 90))}</div>
+          <div class="case-actions" style="margin-top: 9px;">
+            <button class="mini" data-load="${escapeAttr(c.id)}" type="button">载入</button>
+            <button class="mini" data-prompt="${escapeAttr(c.id)}" type="button">提示词</button>
+            <button class="mini" data-delete="${escapeAttr(c.id)}" type="button">删除</button>
+          </div>
+        `;
+        els.caseList.appendChild(div);
+      });
+    }
+
+    function loadCase(id) {
+      const c = getCases().find(x => x.id === id);
+      if (!c) return;
+      els.caseId.value = c.id || "";
+      els.ageBand.value = c.ageBand || "";
+      els.disease.value = c.disease || "ed";
+      els.visitType.value = c.visitType || "首诊";
+      els.complaint.value = c.complaint || "";
+      els.history.value = c.history || "";
+      els.tests.value = c.tests || "";
+      els.tcm.value = c.tcm || "";
+      els.notes.value = c.notes || "";
+      analyze();
+    }
+
+    function deleteCase(id) {
+      if (!confirm("删除这条本机病例？")) return;
+      setCases(getCases().filter(x => x.id !== id));
+      renderLibrary();
+    }
+
+    function generateReview() {
+      const cases = getCases();
+      if (!cases.length) {
+        els.reviewOutput.innerHTML = '<div class="empty">暂无病例。积累5-10例后复盘更有价值。</div>';
+        return;
+      }
+      const diseaseCounts = Object.keys(diseaseMap).map(key => ({
+        key,
+        label: diseaseMap[key].label,
+        count: cases.filter(x => x.disease === key).length
+      })).sort((a, b) => b.count - a.count);
+      const missingAll = cases.flatMap(x => x.missing || []);
+      const riskAll = cases.flatMap(x => x.risks || []);
+      const missingTop = topItems(missingAll, 5);
+      const riskTop = topItems(riskAll, 5);
+      const lowComplete = cases.filter(x => (x.completeness || 0) < 60).slice(0, 5);
+      const questions = cases.map(x => x.notes).filter(Boolean).slice(0, 5);
+      els.reviewOutput.innerHTML = `
+        <div class="review-card">
+          <h3>病例结构</h3>
+          <div class="tag-wrap">${diseaseCounts.map(x => `<span class="tag blue">${x.label} ${x.count}</span>`).join("")}</div>
+        </div>
+        <div class="review-card">
+          <h3>反复漏项</h3>
+          ${missingTop.length ? `<ul class="clean">${missingTop.map(x => `<li>${escapeHtml(x.name)}：${x.count}次</li>`).join("")}</ul>` : '<p class="hint">暂无明显反复漏项。</p>'}
+        </div>
+        <div class="review-card">
+          <h3>风险词</h3>
+          ${riskTop.length ? `<ul class="clean">${riskTop.map(x => `<li>${escapeHtml(x.name)}：${x.count}次</li>`).join("")}</ul>` : '<p class="hint">暂无明确红旗词。</p>'}
+        </div>
+        <div class="review-card">
+          <h3>下周最小学习任务</h3>
+          <ul class="clean">
+            <li>补1个最高频漏项：${escapeHtml(missingTop[0]?.name || "规范化量表记录")}。</li>
+            <li>挑1例完整度最低病例，补成可复诊模板。</li>
+            <li>把1个有效病例整理成A4专病卡。</li>
+          </ul>
+        </div>
+        <div class="review-card">
+          <h3>低完整度病例</h3>
+          ${lowComplete.length ? `<ul class="clean">${lowComplete.map(x => `<li>${escapeHtml(x.id)}：${x.completeness}%</li>`).join("")}</ul>` : '<p class="hint">暂无。</p>'}
+        </div>
+        <div class="review-card">
+          <h3>本周疑问</h3>
+          ${questions.length ? `<ul class="clean">${questions.map(x => `<li>${escapeHtml(x.slice(0, 80))}</li>`).join("")}</ul>` : '<p class="hint">暂无记录。</p>'}
+        </div>
+      `;
+    }
+
+    function topItems(items, n) {
+      const map = new Map();
+      items.forEach(x => map.set(x, (map.get(x) || 0) + 1));
+      return [...map.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count).slice(0, n);
+    }
+
+    function renderPaths() {
+      els.pathLibrary.innerHTML = Object.keys(diseaseMap).map(key => {
+        const d = diseaseMap[key];
+        return `
+          <div class="path-card">
+            <h3>${d.label}</h3>
+            <p class="hint"><strong>必核：</strong>${d.must.map(x => x[0]).join("、")}</p>
+            <ul class="clean">${d.next.map(x => `<li>${x}</li>`).join("")}</ul>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderScaleTools() {
+      els.scaleTools.innerHTML = `
+        ${renderSimpleScale("iief")}
+        ${renderSimpleScale("pedt")}
+        ${renderNihCpsi()}
+        ${renderSimpleScale("ipss", true)}
+        ${renderSemenTool()}
+      `;
+      els.scaleTools.querySelectorAll("[data-calc-scale]").forEach(button => {
+        button.addEventListener("click", () => calculateScale(button.dataset.calcScale));
+      });
+    }
+
+    function renderSimpleScale(key, includeQol = false) {
+      const meta = scaleMeta[key];
+      const rows = meta.items.map((label, index) => `
+        <div class="scale-row">
+          <label for="${key}_${index}">${index + 1}. ${label}</label>
+          <select id="${key}_${index}">
+            <option value="">未选</option>
+            ${meta.options.map(([value, labelText]) => `<option value="${value}">${labelText}</option>`).join("")}
+          </select>
+        </div>
+      `).join("");
+      const qol = includeQol ? `
+        <div class="scale-row">
+          <label for="${key}_qol">生活质量影响</label>
+          <select id="${key}_qol">
+            <option value="">未选</option>
+            <option value="0">0 很满意</option>
+            <option value="1">1 满意</option>
+            <option value="2">2 基本满意</option>
+            <option value="3">3 还可以</option>
+            <option value="4">4 不太满意</option>
+            <option value="5">5 苦恼</option>
+            <option value="6">6 很糟</option>
+          </select>
+        </div>` : "";
+      return `
+        <details class="scale-panel">
+          <summary>${meta.title}</summary>
+          <div class="scale-body">
+            <p class="hint">临床速记版，保留维度和分值；正式病历、科研、量表授权请按医院规范。</p>
+            ${rows}
+            ${qol}
+            <button class="primary" type="button" data-calc-scale="${key}">计算并写入检查摘要</button>
+            <div class="scale-result" id="${key}_result">未计算</div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderNihCpsi() {
+      const sites = ["会阴", "睾丸", "阴茎", "下腹/膀胱区", "射精痛", "排尿痛"];
+      return `
+        <details class="scale-panel">
+          <summary>NIH-CPSI 慢前/CPPS评分</summary>
+          <div class="scale-body">
+            <p class="hint">总分0-43：疼痛0-21，排尿0-10，生活质量0-12。</p>
+            <div class="scale-row">
+              <label>疼痛部位，每项1分</label>
+              <div class="scale-checks">
+                ${sites.map((site, i) => `<label><input type="checkbox" id="nih_site_${i}">${site}</label>`).join("")}
+              </div>
+            </div>
+            ${selectRow("nih_freq", "疼痛频率", [[0,"0 从无"],[1,"1 很少"],[2,"2 有时"],[3,"3 经常"],[4,"4 通常"],[5,"5 总是"]])}
+            ${rangeRow("nih_pain", "平均疼痛程度", 0, 10)}
+            ${selectRow("nih_void1", "排尿不尽", scaleMeta.ipss.options)}
+            ${selectRow("nih_void2", "两小时内再排尿", scaleMeta.ipss.options)}
+            ${selectRow("nih_qol1", "症状影响日常", [[0,"0 无"],[1,"1 轻"],[2,"2 中"],[3,"3 重"]])}
+            ${selectRow("nih_qol2", "症状困扰/反复想到", [[0,"0 无"],[1,"1 轻"],[2,"2 中"],[3,"3 重"]])}
+            ${selectRow("nih_qol3", "若长期如此的生活感受", [[0,"0 很满意"],[1,"1 满意"],[2,"2 基本满意"],[3,"3 还可以"],[4,"4 不太满意"],[5,"5 苦恼"],[6,"6 很糟"]])}
+            <button class="primary" type="button" data-calc-scale="nih">计算并写入检查摘要</button>
+            <div class="scale-result" id="nih_result">未计算</div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderSemenTool() {
+      return `
+        <details class="scale-panel">
+          <summary>精液分析结构化录入</summary>
+          <div class="scale-body">
+            <p class="hint">按WHO第6版参考下限做提示：体积1.4ml、浓度16百万/ml、总数39百万、前向30%、总活动42%、形态4%、活力54%。单次异常通常需规范复查。</p>
+            ${numberRow("semen_volume", "体积 ml")}
+            ${numberRow("semen_conc", "浓度 百万/ml")}
+            ${numberRow("semen_total_mot", "总活动率 %")}
+            ${numberRow("semen_prog_mot", "前向运动率 %")}
+            ${numberRow("semen_morph", "正常形态率 %")}
+            ${numberRow("semen_vitality", "活力 %")}
+            <button class="primary" type="button" data-calc-scale="semen">计算并写入检查摘要</button>
+            <div class="scale-result" id="semen_result">未计算</div>
+          </div>
+        </details>
+      `;
+    }
+
+    function selectRow(id, label, options) {
+      return `
+        <div class="scale-row">
+          <label for="${id}">${label}</label>
+          <select id="${id}">
+            <option value="">未选</option>
+            ${options.map(([value, text]) => `<option value="${value}">${text}</option>`).join("")}
+          </select>
+        </div>
+      `;
+    }
+
+    function rangeRow(id, label, min, max) {
+      const options = [];
+      for (let i = min; i <= max; i += 1) options.push([i, String(i)]);
+      return selectRow(id, label, options);
+    }
+
+    function numberRow(id, label) {
+      return `
+        <div class="scale-row">
+          <label for="${id}">${label}</label>
+          <input id="${id}" type="number" min="0" step="0.1" inputmode="decimal" placeholder="未填">
+        </div>
+      `;
+    }
+
+    function calculateScale(key) {
+      if (key === "nih") return calculateNih();
+      if (key === "semen") return calculateSemen();
+      const meta = scaleMeta[key];
+      const values = meta.items.map((_, i) => readNumber(`${key}_${i}`));
+      const missing = values.filter(v => Number.isNaN(v)).length;
+      if (missing) return toast(`还有${missing}项未填`);
+      const total = values.reduce((a, b) => a + b, 0);
+      let summary = "";
+      if (key === "iief") summary = `IIEF-5 ${total}/25，${interpretIief(total)}`;
+      if (key === "pedt") summary = `PEDT ${total}/20，${interpretPedt(total)}`;
+      if (key === "ipss") {
+        const qol = readNumber("ipss_qol");
+        summary = `IPSS ${total}/35，${interpretIpss(total)}${Number.isNaN(qol) ? "" : `；QoL ${qol}/6`}`;
+      }
+      document.getElementById(`${key}_result`).textContent = summary;
+      upsertScaleLine(meta.prefix, `[${meta.prefix}] ${summary}`);
+      toast("已写入检查摘要");
+    }
+
+    function calculateNih() {
+      const siteCount = [...document.querySelectorAll("[id^='nih_site_']")].filter(x => x.checked).length;
+      const freq = readNumber("nih_freq");
+      const painScore = readNumber("nih_pain");
+      const void1 = readNumber("nih_void1");
+      const void2 = readNumber("nih_void2");
+      const qol1 = readNumber("nih_qol1");
+      const qol2 = readNumber("nih_qol2");
+      const qol3 = readNumber("nih_qol3");
+      const values = [freq, painScore, void1, void2, qol1, qol2, qol3];
+      const missing = values.filter(v => Number.isNaN(v)).length;
+      if (missing) return toast(`还有${missing}项未填`);
+      const pain = siteCount + freq + painScore;
+      const urinary = void1 + void2;
+      const qol = qol1 + qol2 + qol3;
+      const total = pain + urinary + qol;
+      const summary = `NIH-CPSI ${total}/43，${interpretNih(total)}；疼痛${pain}/21，排尿${urinary}/10，生活质量${qol}/12`;
+      document.getElementById("nih_result").textContent = summary;
+      upsertScaleLine("NIH-CPSI", `[NIH-CPSI] ${summary}`);
+      toast("已写入检查摘要");
+    }
+
+    function calculateSemen() {
+      const volume = readNumber("semen_volume");
+      const conc = readNumber("semen_conc");
+      const totalMot = readNumber("semen_total_mot");
+      const progMot = readNumber("semen_prog_mot");
+      const morph = readNumber("semen_morph");
+      const vitality = readNumber("semen_vitality");
+      const coreMissing = [volume, conc, totalMot, progMot, morph].filter(v => Number.isNaN(v)).length;
+      if (coreMissing) return toast(`核心项还有${coreMissing}项未填`);
+      const totalCount = volume * conc;
+      const tmc = totalCount * totalMot / 100;
+      const pmc = totalCount * progMot / 100;
+      const flags = [];
+      if (volume < 1.4) flags.push("体积低");
+      if (conc < 16) flags.push("浓度低");
+      if (totalCount < 39) flags.push("总数低");
+      if (progMot < 30) flags.push("前向运动低");
+      if (totalMot < 42) flags.push("总活动低");
+      if (morph < 4) flags.push("形态低");
+      if (!Number.isNaN(vitality) && vitality < 54) flags.push("活力低");
+      const summary = `精液分析：体积${volume}ml，浓度${conc}百万/ml，总数${totalCount.toFixed(1)}百万，TMC ${tmc.toFixed(1)}百万，PMC ${pmc.toFixed(1)}百万，前向${progMot}%，总活动${totalMot}%，形态${morph}%${Number.isNaN(vitality) ? "" : `，活力${vitality}%`}；${flags.length ? `提示：${flags.join("、")}，建议结合禁欲时间和规范复查` : "主要参考项未低于WHO第6版参考下限"}`;
+      document.getElementById("semen_result").textContent = summary;
+      upsertScaleLine("精液分析", `[精液分析] ${summary}`);
+      toast("已写入检查摘要");
+    }
+
+    function readNumber(id) {
+      const value = document.getElementById(id)?.value;
+      if (value === "" || value == null) return NaN;
+      return Number(value);
+    }
+
+    function interpretIief(score) {
+      if (score <= 7) return "重度ED";
+      if (score <= 11) return "中度ED";
+      if (score <= 16) return "轻中度ED";
+      if (score <= 21) return "轻度ED";
+      return "未提示ED或接近正常";
+    }
+
+    function interpretPedt(score) {
+      if (score <= 8) return "不支持PE";
+      if (score <= 10) return "可疑PE";
+      return "支持PE";
+    }
+
+    function interpretIpss(score) {
+      if (score <= 7) return "轻度LUTS";
+      if (score <= 19) return "中度LUTS";
+      return "重度LUTS";
+    }
+
+    function interpretNih(score) {
+      if (score <= 14) return "轻度";
+      if (score <= 29) return "中度";
+      return "重度";
+    }
+
+    function upsertScaleLine(prefix, line) {
+      const lines = els.tests.value.split("\n").filter(Boolean);
+      const next = lines.filter(x => !x.startsWith(`[${prefix}]`));
+      next.push(line);
+      els.tests.value = next.join("\n");
+    }
+
+    function showPage(page) {
+      document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+      document.getElementById(`page-${page}`).classList.add("active");
+      document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.page === page));
+      if (page === "library") renderLibrary();
+      if (page === "review") generateReview();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function fillDemo() {
+      els.caseId.value = "ED-DEMO-001";
+      els.ageBand.value = "30-39岁";
+      els.disease.value = "ed";
+      els.visitType.value = "首诊";
+      els.complaint.value = "勃起维持差6个月，晨勃减少，性生活成功率下降。";
+      els.history.value = "工作压力大，睡眠差，久坐，偶有焦虑。无胸痛。否认硝酸甘油用药。吸烟，体重增加。";
+      els.tests.value = "IIEF-5 12分。血糖血脂、总睾酮待查。";
+      els.tcm.value = "睡眠差，压力大，脉弦，腰膝酸软不明显，舌淡红。";
+      els.notes.value = "疑问：是否先做心代谢和内分泌筛查；复诊看IIEF-5变化。";
+      analyze();
+    }
+
+    function copyPrompt() {
+      if (!lastAnalysis) analyze();
+      navigator.clipboard?.writeText(els.promptBox.value).then(() => toast("提示词已复制")).catch(() => {
+        els.promptBox.select();
+        document.execCommand("copy");
+        toast("提示词已选中/复制");
+      });
+    }
+
+    let activeRecognition = null;
+    let activeVoiceButton = null;
+
+    function startVoiceInput(targetId, button) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        target.focus();
+        toast("当前浏览器不支持页面语音；请点键盘麦克风");
+        return;
+      }
+
+      if (activeRecognition) {
+        activeRecognition.stop();
+        if (activeVoiceButton) {
+          activeVoiceButton.classList.remove("recording");
+          activeVoiceButton.textContent = "语音";
+        }
+        activeRecognition = null;
+        activeVoiceButton = null;
+        if (button.dataset.voiceTarget === targetId) return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "zh-CN";
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        activeRecognition = recognition;
+        activeVoiceButton = button;
+        button.classList.add("recording");
+        button.textContent = "停止";
+        target.focus();
+        toast("正在听写");
+      };
+
+      recognition.onresult = event => {
+        let text = "";
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          if (event.results[i].isFinal) {
+            text += event.results[i][0].transcript;
+          }
+        }
+        if (text.trim()) {
+          const prefix = target.value.trim() ? "\n" : "";
+          target.value += prefix + text.trim();
+          target.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      };
+
+      recognition.onerror = event => {
+        const message = event.error === "not-allowed"
+          ? "没有麦克风权限"
+          : event.error === "network"
+            ? "语音服务需要网络或系统离线语音包"
+            : "语音识别不可用，请改用键盘麦克风";
+        toast(message);
+      };
+
+      recognition.onend = () => {
+        button.classList.remove("recording");
+        button.textContent = "语音";
+        if (activeRecognition === recognition) {
+          activeRecognition = null;
+          activeVoiceButton = null;
+        }
+      };
+
+      try {
+        recognition.start();
+      } catch {
+        toast("语音识别启动失败，请用键盘麦克风");
+      }
+    }
+
+    function exportData() {
+      els.dataBox.value = JSON.stringify(getCases(), null, 2);
+      toast("已生成JSON");
+    }
+
+    function importData() {
+      try {
+        const data = JSON.parse(els.dataBox.value);
+        if (!Array.isArray(data)) throw new Error("not array");
+        setCases(data);
+        renderLibrary();
+        toast("导入完成");
+      } catch {
+        alert("JSON格式不正确。");
+      }
+    }
+
+    function clearData() {
+      if (!confirm("清空本机所有病例数据？")) return;
+      localStorage.removeItem(STORE_KEY);
+      renderLibrary();
+      els.dataBox.value = "";
+      toast("已清空");
+    }
+
+    function toast(msg) {
+      const div = document.createElement("div");
+      div.textContent = msg;
+      div.style.cssText = "position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#102725;color:#fff;padding:9px 13px;border-radius:999px;z-index:99;font-weight:800;font-size:13px;box-shadow:0 8px 20px rgba(0,0,0,.2)";
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 1600);
+    }
+
+    function escapeHtml(s) {
+      return String(s || "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[ch]));
+    }
+
+    function escapeAttr(s) {
+      return escapeHtml(s).replace(/"/g, "&quot;");
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => btn.addEventListener("click", () => showPage(btn.dataset.page)));
+    document.getElementById("analyzeBtn").addEventListener("click", analyze);
+    document.getElementById("saveBtn").addEventListener("click", saveCurrent);
+    document.getElementById("demoBtn").addEventListener("click", fillDemo);
+    document.getElementById("copyPromptBtn").addEventListener("click", copyPrompt);
+    document.getElementById("filterDisease").addEventListener("change", renderLibrary);
+    document.getElementById("reviewBtn").addEventListener("click", generateReview);
+    document.getElementById("exportBtn").addEventListener("click", exportData);
+    document.getElementById("importBtn").addEventListener("click", importData);
+    document.getElementById("clearBtn").addEventListener("click", clearData);
+    document.querySelectorAll("[data-voice-target]").forEach(button => {
+      button.addEventListener("click", () => startVoiceInput(button.dataset.voiceTarget, button));
+    });
+
+    els.caseList.addEventListener("click", event => {
+      const btn = event.target.closest("button");
+      if (!btn) return;
+      if (btn.dataset.load) loadCase(btn.dataset.load);
+      if (btn.dataset.delete) deleteCase(btn.dataset.delete);
+      if (btn.dataset.prompt) {
+        const c = getCases().find(x => x.id === btn.dataset.prompt);
+        if (c) {
+          els.promptBox.value = c.prompt || "";
+          lastAnalysis = c;
+          showPage("result");
+        }
+      }
+    });
+
+    renderLibrary();
+    renderPaths();
+    renderScaleTools();
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>
